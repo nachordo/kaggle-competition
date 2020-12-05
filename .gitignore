@@ -1,6 +1,7 @@
 # Things project
 testing.py
 *.csv
+data-exploration.ipynb
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
