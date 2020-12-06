@@ -16,7 +16,7 @@ from sklearn.ensemble import RandomForestRegressor
 
 from sklearn.model_selection import train_test_split
 
-
+# Returns the linear regresion and its test rmse
 def first_test(X,y):
     print("LinearRegression")
     X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.85 )
@@ -29,6 +29,7 @@ def first_test(X,y):
     print("RMSE (test) =",rmse)
     return linreg, rmse
 
+# Returns the best Random Forest model and its test rmse
 def forest_fit(X,y):
     print("Forest")
     X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.8 )
@@ -38,6 +39,7 @@ def forest_fit(X,y):
     print("RMSE (test) =",rmse)
     return func, rmse
 
+# Returns the best ElasticNet model and its test rmse
 def l2l1_fit(X,y):
     print("L2 L1")
     X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.8 )
@@ -47,6 +49,7 @@ def l2l1_fit(X,y):
     print("RMSE (test) =",rmse)
     return func, rmse
 
+# Returns the best KNN model and its test rmse
 def knn_fit(X,y):
     print("KNN")
     X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.8 )
@@ -56,12 +59,24 @@ def knn_fit(X,y):
     print("RMSE (test) =",rmse)
     return func, rmse
 
+
+
+# Improved function to obtain the best fitting Random Forest for a greater grid
+def forest_tuning_fit(X,y):
+    print("Forest")
+    X_train, X_test, y_train, y_test = train_test_split(X,y,train_size=0.8 )
+    func,bf = tuning_random_tree_grid(X_train, y_train)
+    y_pred = func.predict(X_test)
+    rmse = mean_squared_error(10**y_test.values, 10**y_pred, squared=False)
+    print("RMSE (test) =",rmse)
+    return func, rmse,bf
+
+# Function to obtain the best fitting ML method ant its test RMSE
 def best_func(X,y):
     best_one = None
     best_rmse = 1_000_000
     #lambda a,b: l2l1_fit(a,b),
     f_list=[lambda a,b: first_test(a,b),
-            
             lambda a,b: knn_fit(a,b),
             lambda a,b: forest_fit(a,b) ]
     

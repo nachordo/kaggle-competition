@@ -11,6 +11,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.neighbors import KNeighborsRegressor
 import numpy as np
 
+# Grid to search for the best random tree model
 def random_tree_grid(X,y):
     rfc = RandomForestRegressor(n_jobs=-1,max_features= 'sqrt'
                                  ,n_estimators=50, criterion = "mse") 
@@ -30,7 +31,28 @@ def random_tree_grid(X,y):
     
     return rfc
 
+# Improved grid to search for the best random tree model
+def tuning_random_tree_grid(X,y):
+    rfc = RandomForestRegressor(n_jobs=-1,max_features= 'sqrt'
+                                 ,n_estimators=50, criterion = "mse") 
+    
+    param_grid = { 
+        'max_depth': [25,50,100,None],
+        'min_samples_split': [2,5,10],
+        'min_samples_leaf': [1,3,5],
+        'max_features': ['auto', 'sqrt'],
+        'n_estimators': [50,250, 1000, 1240, 1500, 2000]
+    }
+ 
+    CV_rfc = GridSearchCV(estimator=rfc,verbose=3, param_grid=param_grid, cv= 6)
+    CV_rfc.fit(X, y)
+    
+    rfc = RandomForestRegressor(n_jobs=-1,**CV_rfc.best_params_, criterion = "mse")
+    rfc.fit(X,y)
+    
+    return rfc,[CV_rfc.best_params_]
 
+# Grid to search for the best ElasticNet model
 def l2_l1_grid(X,y):
     parametersGrid = {"max_iter": [1_000, 5_000],
                       "alpha": [0.0001, 0.001, 0.01, 0.1, 1, 10, 100],
@@ -45,7 +67,7 @@ def l2_l1_grid(X,y):
     return l2l1
 
 
-
+# Grid to search for the best KNN model
 def knn_grid(X,y):
     params = {'n_neighbors':[3,5,9,13,15,31,51,61,75],
               'weights':['uniform', 'distance']}
